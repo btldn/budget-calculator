@@ -1,11 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Money calculator</title>
+    <script defer type="module" src="index.js"></script>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    
+    <section class="budget_header">
+        <div class="budget_header-wrapper">
+            <div class="budget_outcome">
+                <h3 class="budget_outcome-title">Траты</h2>
+                <span class="budget_outcome-fact">75000</span>
+                из
+                <span class="budget_outcome-plan">60000</span>
+            </div>
+            <div class="budget_income">
+                <h3 class="budget_income-title">Доходы</h3>
+                <span class="budget_income-fact">15000</span>
+                из
+                <span class="budget_income-plan">34000</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="budget_inputs">
+        <div class="budget_inputs-header">
+            <h3 class="budget_inputs-title">Добавить транзакцию</h3>
+            <button class="budget_inputs-add">Добавить</button>
+        </div>
+        <div class="budget_inputs-body">
+            <select class="budget_input-source">
+                <option value="Тинькофф">Тинькофф</option>
+                <option value="Наличные">Наличные</option>
+                <option value="Сбербанк">Сбербанк</option>
+            </select>
+            <select class="budget_input-category">
+                <option value="Зарплата">Зарплата</option>
+                <option value="Ресторан">Ресторан</option>
+                <option value="Супермаркет">Супермаркет</option>
+            </select>
+            <input class="budget_input-amount" placeholder="Введите сумму">
+            <textarea class="budget_input-commentary" placeholder="Комментарий..."></textarea>
+        </div>
+            
+    </section>
+
+    <section class="budget_history">
+        <div class="budget_history-wrapper">
+            <h2 class="budget_history-title">История</h2>
+            <ul class="budget_list">
+                <div class="budget_item-wrapper">      
+                    <div class="budget_item-header">
+                        <h3 class="budget_item-date">21.05</h3>
+                        <span class="budget_item-date-sum">-23796 ₽</span>
+                    </div>
+                    <li class="budget_item">
+                        <div class="budget_item-title">
+                            <span class="budget_item-category">Еда</span>
+                            <span class="budget_item-source">Тинькофф</span>
+                        </div>
+                        <div class="budget_item-amount">-1204 ₽</div>
+                        <!-- <span class="budget_item-commentary">Закупка в магните</span> -->
+                    </li>
+                    <li class="budget_item">
+                        <div class="budget_item-title">
+                            <span class="budget_item-category">Зарплата</span>
+                            <span class="budget_item-source">Тинькофф</span>
+                        </div>
+                        <div class="budget_item-amount">25000 ₽</div>
+                    </li>
+                </div>
+            </ul>  
+        </div>
+    </section>
 </body>
+
 </html>
