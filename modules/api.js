@@ -1,6 +1,10 @@
 import { createTransaction } from "../index.js"
 
-export const arrOfTransactions = new Map()
+export const mapOfTransactions = new Map()
+export const arrOfDates = []
+export let arrOfTransactions = []
+
+
 
 const historyUrl = 'https://680256170a99cb7408e950d7.mockapi.io/transactions'
 
@@ -8,15 +12,21 @@ export default async function getTransactions() {
     try {
         const response = await fetch(historyUrl)
         const transactions = await response.json()
+        arrOfTransactions = transactions
 
         for (let transaction of transactions) {
-            if (arrOfTransactions.has(transaction.date)) {
-                arrOfTransactions.get(transaction.date).push(transaction)
-            } else {
-                arrOfTransactions.set(transaction.date, [transaction])
+            if (!arrOfDates.includes(transaction.date)) {
+                arrOfDates.push(transaction.date);
             }
         } 
-        console.log(arrOfTransactions)
+
+        for (let transaction of transactions) {
+            if (mapOfTransactions.has(transaction.date)) {
+                mapOfTransactions.get(transaction.date).push(transaction)
+            } else {
+                mapOfTransactions.set(transaction.date, [transaction])
+            }
+        } 
 
     } catch (error) {
 

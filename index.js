@@ -1,4 +1,4 @@
-import { addTransactionRequest, arrOfTransactions } from "./modules/api.js"
+import { addTransactionRequest, arrOfTransactions, arrOfDates, mapOfTransactions } from "./modules/api.js"
 
 const inputSource = document.querySelector('.budget_input-source')
 const inputCategory = document.querySelector('.budget_input-category')
@@ -39,6 +39,7 @@ function handleAddTransaction() {
 function createDate(date) {
     const dateWrapper = document.createElement('div')
     dateWrapper.className = 'budget_item-wrapper'
+    dateWrapper.id = `${date}`
     historyList.append(dateWrapper)
 
     const newDate = document.createElement('div')
@@ -57,9 +58,7 @@ function createDate(date) {
  
 }
 
-export function createTransaction(transaction) {
-    const dateWrapper = document.querySelector('.budget_item-wrapper') 
-
+export function createTransaction(transaction, dateWrapper) {
     const newTransaction = document.createElement('li')
     newTransaction.className = 'budget_item'
     newTransaction.dataset.id = transaction.id
@@ -90,21 +89,23 @@ export function createTransaction(transaction) {
     newTransaction.append(transactionAmount)
 }
 
-function renderTransaction() {
-    const daySum = document.querySelector('.budget_item-date-sum')
-    const datesWrapper = document.querySelectorAll('.budget_item-wrapper')
-    const dates = datesOfTransactions()
-    let daySumAmount = 0
+function renderTransaction() {  
+    const sortedArrOfDates = [...arrOfDates].sort((a, b) => b.localeCompare(a, { sensitivity: 'base' }))
 
-    for (let date of arrOfTransactions) {
+    for (let date of sortedArrOfDates) {
         createDate(date)
-    }
-
-    // console.log(arrOfTransactions)
-    // console.log(daySumAmount)
-    daySum.innerHTML = `${daySumAmount} ₽`
-    
+        const dateWrapper = document.getElementById(date)
+        for (let transaction of arrOfTransactions) {
+            if (transaction.date == date) {
+                createTransaction(transaction, dateWrapper)
+            }
+        }
+    }    
 }
+
+
+mapOfTransactions.entries()
+
 
 renderTransaction()
 
