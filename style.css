@@ -76,7 +76,17 @@ html {
 }
 
 .budget_inputs-body select {
-    width: 170px;
+    width: 130px;
+    padding: 7px 11px;
+    background-color: #E0E0E0;
+    font-size: 14px;
+    color: #939393;
+    border: none;
+    border-radius: 8px;
+}
+
+.budget_input-date {
+    width: 130px;
     padding: 7px 11px;
     background-color: #E0E0E0;
     font-size: 14px;
@@ -107,7 +117,7 @@ html {
 }
 
 .budget_input-amount {
-    width: 230px;
+    width: 180px;
     background-color: #E0E0E0;
     padding: 8px 11px;
     font-size: 14px;
@@ -183,6 +193,14 @@ html {
 
 .budget_item-amount {
     font-weight: bold;
+}
+
+.positive-amount {
+    color: green;
+}
+
+.negative-amount {
+    color: red;
 }
 
 
