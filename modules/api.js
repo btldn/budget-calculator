@@ -4,8 +4,6 @@ export const mapOfTransactions = new Map()
 export const arrOfDates = []
 export let arrOfTransactions = []
 
-
-
 const historyUrl = 'https://680256170a99cb7408e950d7.mockapi.io/transactions'
 
 export default async function getTransactions() {

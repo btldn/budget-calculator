@@ -1,4 +1,4 @@
-import { addTransactionRequest, arrOfTransactions, arrOfDates, mapOfTransactions } from "./modules/api.js"
+import getTransactions, { addTransactionRequest, arrOfTransactions, arrOfDates, mapOfTransactions } from "./modules/api.js"
 
 const inputSource = document.querySelector('.budget_input-source')
 const inputCategory = document.querySelector('.budget_input-category')
@@ -13,15 +13,6 @@ const addTransactionButton = document.querySelector('.budget_inputs-add')
 const historyList = document.querySelector('.budget_list')
 
 const dayAmount = document.querySelectorAll('.budget_item-amount')
-
-function datesOfTransactions() {
-    const dates = []
-    for (let transaction of arrOfTransactions) {
-        dates.push(transaction.date)
-    }
-    return dates
-}
-
 
 function handleAddTransaction() {
     const transaction = {
@@ -50,13 +41,16 @@ function handleAddTransaction() {
             console.log(insertBefore)
         }
         const insertBeforeBlock = document.getElementById(insertBefore)
-
         historyList.insertBefore(createDate(transaction.date), insertBeforeBlock)
 
     }
 
     createTransaction(transaction, document.getElementById(transaction.date))
     const response = addTransactionRequest(transaction.date, transaction)
+
+    let dayAmount = +document.getElementById(transaction.date).querySelector('.budget_item-date-sum').textContent.slice(0, -2)
+    dayAmount += transaction.amount
+    document.getElementById(transaction.date).querySelector('.budget_item-date-sum').innerHTML = `${dayAmount} ₽`
 
     inputAmount.value = ''
     inputCommentary.value = ''
@@ -128,12 +122,35 @@ function renderTransaction() {
             }
         }
     }
+
+    calculateDayAmount()
 }
 
 function sortDates(arr) {
     arr = [...arr].sort((a, b) => b.localeCompare(a, { sensitivity: 'base' }))
     return arr
 }
+
+function calculateDayAmount() {
+    let daySum = 0
+    let currentDate = null
+    const sortedArrOfTransactions = [...arrOfTransactions].sort((a, b) => b.date.localeCompare(a.date, { sensitivity: 'base' }))
+    for (let transaction of sortedArrOfTransactions) {
+        if (transaction.date !== currentDate) {
+            currentDate = transaction.date
+            daySum = 0
+        } 
+
+        daySum += transaction.amount
+        
+        document.getElementById(transaction.date).querySelector('.budget_item-date-sum').innerHTML = `${daySum} ₽`
+
+    }
+}
+
+
+
+console.log(mapOfTransactions)
 
 renderTransaction()
 

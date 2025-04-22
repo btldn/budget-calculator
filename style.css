@@ -153,7 +153,9 @@ html {
 }
 
 .budget_list {
-    list-style: none; 
+    list-style: none;
+    max-height: 500px;
+    overflow: auto;
 }
 
 .budget_item-header {
