@@ -6,13 +6,15 @@ const inputAmount = document.querySelector('.budget_input-amount')
 const inputCommentary = document.querySelector('.budget_input-commentary')
 const inputDate = document.querySelector('.budget_input-date')
 
+let localArrOfDates = arrOfDates
+
 const addTransactionButton = document.querySelector('.budget_inputs-add')
 
 const historyList = document.querySelector('.budget_list')
 
 const dayAmount = document.querySelectorAll('.budget_item-amount')
 
-function datesOfTransactions() {  
+function datesOfTransactions() {
     const dates = []
     for (let transaction of arrOfTransactions) {
         dates.push(transaction.date)
@@ -30,6 +32,30 @@ function handleAddTransaction() {
         date: inputDate.value
     }
 
+    let insertBefore = null
+    if (document.getElementById(transaction.date) == null) {
+        localArrOfDates = sortDates(localArrOfDates)
+
+        for (let i = 0; i <= localArrOfDates.length - 1; i++) {
+            if (localArrOfDates[i] > transaction.date) {
+                insertBefore = localArrOfDates[i + 1]
+                console.log(insertBefore, localArrOfDates[i + 1])
+            }
+        }
+
+        localArrOfDates.push(transaction.date)
+
+        if (insertBefore == null) {
+            insertBefore = localArrOfDates[0]
+            console.log(insertBefore)
+        }
+        const insertBeforeBlock = document.getElementById(insertBefore)
+
+        historyList.insertBefore(createDate(transaction.date), insertBeforeBlock)
+
+    }
+
+    createTransaction(transaction, document.getElementById(transaction.date))
     const response = addTransactionRequest(transaction.date, transaction)
 
     inputAmount.value = ''
@@ -55,7 +81,9 @@ function createDate(date) {
     daySum.className = 'budget_item-date-sum'
     daySum.innerHTML = 0
     newDate.append(daySum)
- 
+
+    return dateWrapper
+
 }
 
 export function createTransaction(transaction, dateWrapper) {
@@ -89,9 +117,8 @@ export function createTransaction(transaction, dateWrapper) {
     newTransaction.append(transactionAmount)
 }
 
-function renderTransaction() {  
-    const sortedArrOfDates = [...arrOfDates].sort((a, b) => b.localeCompare(a, { sensitivity: 'base' }))
-
+function renderTransaction() {
+    const sortedArrOfDates = sortDates(arrOfDates)
     for (let date of sortedArrOfDates) {
         createDate(date)
         const dateWrapper = document.getElementById(date)
@@ -100,15 +127,15 @@ function renderTransaction() {
                 createTransaction(transaction, dateWrapper)
             }
         }
-    }    
+    }
 }
 
-
-mapOfTransactions.entries()
-
+function sortDates(arr) {
+    arr = [...arr].sort((a, b) => b.localeCompare(a, { sensitivity: 'base' }))
+    return arr
+}
 
 renderTransaction()
-
 
 addTransactionButton.addEventListener('click', handleAddTransaction)
 
