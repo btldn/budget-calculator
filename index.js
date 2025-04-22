@@ -5,8 +5,12 @@ const inputCategory = document.querySelector('.budget_input-category')
 const inputAmount = document.querySelector('.budget_input-amount')
 const inputCommentary = document.querySelector('.budget_input-commentary')
 const inputDate = document.querySelector('.budget_input-date')
+let sumOfIncomes = 0
+let sumOfOutcomes = 0
+
 
 let localArrOfDates = arrOfDates
+let localArrOfTransactions = arrOfTransactions
 
 const addTransactionButton = document.querySelector('.budget_inputs-add')
 
@@ -51,6 +55,9 @@ function handleAddTransaction() {
     let dayAmount = +document.getElementById(transaction.date).querySelector('.budget_item-date-sum').textContent.slice(0, -2)
     dayAmount += transaction.amount
     document.getElementById(transaction.date).querySelector('.budget_item-date-sum').innerHTML = `${dayAmount} ₽`
+
+    calculateTransactions()
+
 
     inputAmount.value = ''
     inputCommentary.value = ''
@@ -112,7 +119,7 @@ export function createTransaction(transaction, dateWrapper) {
 }
 
 function renderTransaction() {
-    const sortedArrOfDates = sortDates(arrOfDates)
+    const sortedArrOfDates = sortDates(localArrOfDates)
     for (let date of sortedArrOfDates) {
         createDate(date)
         const dateWrapper = document.getElementById(date)
@@ -124,6 +131,8 @@ function renderTransaction() {
     }
 
     calculateDayAmount()
+    calculateTransactions()
+
 }
 
 function sortDates(arr) {
@@ -134,7 +143,7 @@ function sortDates(arr) {
 function calculateDayAmount() {
     let daySum = 0
     let currentDate = null
-    const sortedArrOfTransactions = [...arrOfTransactions].sort((a, b) => b.date.localeCompare(a.date, { sensitivity: 'base' }))
+    const sortedArrOfTransactions = [...localArrOfTransactions].sort((a, b) => b.date.localeCompare(a.date, { sensitivity: 'base' }))
     for (let transaction of sortedArrOfTransactions) {
         if (transaction.date !== currentDate) {
             currentDate = transaction.date
@@ -148,9 +157,22 @@ function calculateDayAmount() {
     }
 }
 
+function calculateTransactions() {
+    const allIncome = document.querySelector('.budget_income-fact')
+    const allOutcome = document.querySelector('.budget_outcome-fact')
+
+    for (let transaction of localArrOfTransactions) {
+        if (transaction.amount >= 0) {
+            sumOfIncomes += transaction.amount
+        } else {
+            sumOfOutcomes += (transaction.amount * -1)
+        }
+    }
 
 
-console.log(mapOfTransactions)
+    allIncome.innerHTML = sumOfIncomes
+    allOutcome.innerHTML = sumOfOutcomes
+}
 
 renderTransaction()
 
