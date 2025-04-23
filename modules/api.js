@@ -10,13 +10,6 @@ export default async function getTransactions() {
     try {
         const response = await fetch(historyUrl)
         const transactions = await response.json()
-        arrOfTransactions = transactions
-
-        for (let transaction of transactions) {
-            if (!arrOfDates.includes(transaction.date)) {
-                arrOfDates.push(transaction.date);
-            }
-        } 
 
         for (let transaction of transactions) {
             if (mapOfTransactions.has(transaction.date)) {
@@ -26,6 +19,19 @@ export default async function getTransactions() {
             }
         } 
 
+        // ошибка с тем, что прохожусь по двум транкзациям с одинаковой датой,
+        // тут нужен values()?
+
+        for (let transaction of transactions) {
+            if (mapOfTransactions.has(transaction.date)) {
+                arrOfTransactions.push({
+                    date: transaction.date,
+                    transactions: mapOfTransactions.get(transaction.date)
+                })
+            } 
+        } 
+
+        console.log(arrOfTransactions)
     } catch (error) {
 
     }

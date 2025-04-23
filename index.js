@@ -27,27 +27,20 @@ function handleAddTransaction() {
         date: inputDate.value
     }
 
-    let insertBefore = null
-    if (document.getElementById(transaction.date) == null) {
-        localArrOfDates = sortDates(localArrOfDates)
+    let existingDate = arrOfTransactions.find(transactions => transactions.date == transaction.date)
 
-        for (let i = 0; i <= localArrOfDates.length - 1; i++) {
-            if (localArrOfDates[i] > transaction.date) {
-                insertBefore = localArrOfDates[i + 1]
-                console.log(insertBefore, localArrOfDates[i + 1])
-            }
-        }
-
-        localArrOfDates.push(transaction.date)
-
-        if (insertBefore == null) {
-            insertBefore = localArrOfDates[0]
-            console.log(insertBefore)
-        }
-        const insertBeforeBlock = document.getElementById(insertBefore)
-        historyList.insertBefore(createDate(transaction.date), insertBeforeBlock)
-
+    if (existingDate) {
+        console.log(existingDate)
+        existingDate.transactions.push(transaction)
+    } else {
+        createDate(transaction.date)
+        arrOfTransactions.push({
+            date: transaction.date,
+            transactions: [transaction]
+        })
     }
+
+    console.log(arrOfTransactions)
 
     createTransaction(transaction, document.getElementById(transaction.date))
     const response = addTransactionRequest(transaction.date, transaction)
@@ -119,13 +112,17 @@ export function createTransaction(transaction, dateWrapper) {
 }
 
 function renderTransaction() {
-    const sortedArrOfDates = sortDates(localArrOfDates)
-    for (let date of sortedArrOfDates) {
-        createDate(date)
-        const dateWrapper = document.getElementById(date)
-        for (let transaction of arrOfTransactions) {
-            if (transaction.date == date) {
-                createTransaction(transaction, dateWrapper)
+    const sortedArrOfTransactions = [...arrOfTransactions].sort((a, b) => b.date.localeCompare(a, { sensitivity: 'base' }))
+    console.log(arrOfTransactions)
+    console.log(mapOfTransactions)
+    console.log(sortedArrOfTransactions)
+
+    for (let transactions of sortedArrOfTransactions) {
+        createDate(transactions.date)
+        const dateBlock = document.getElementById(transactions.date)
+        for (let transaction of transactions.transactions) {
+            if (transaction.date == dateBlock.id) {
+                createTransaction(transaction, dateBlock)
             }
         }
     }
