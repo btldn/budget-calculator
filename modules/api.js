@@ -18,20 +18,24 @@ export default async function getTransactions() {
                 mapOfTransactions.set(transaction.date, [transaction])
             }
         } 
+    
 
-        // ошибка с тем, что прохожусь по двум транкзациям с одинаковой датой,
-        // тут нужен values()?
+        for (let [date, transactionsForDate] of mapOfTransactions) {
+            let total = 0
 
-        for (let transaction of transactions) {
-            if (mapOfTransactions.has(transaction.date)) {
-                arrOfTransactions.push({
-                    date: transaction.date,
-                    transactions: mapOfTransactions.get(transaction.date)
-                })
-            } 
-        } 
+            for (let dateTransaction of transactionsForDate) {
+                total += dateTransaction.amount
+            }
 
-        console.log(arrOfTransactions)
+            arrOfTransactions.push({
+                date,
+                transactions: transactionsForDate,
+                totalAmount: total
+            });
+
+            total = 0
+        }
+
     } catch (error) {
 
     }

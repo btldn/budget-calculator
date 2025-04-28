@@ -27,22 +27,10 @@ function handleAddTransaction() {
         date: inputDate.value
     }
 
-    let existingDate = arrOfTransactions.find(transactions => transactions.date == transaction.date)
-
-    if (existingDate) {
-        console.log(existingDate)
-        existingDate.transactions.push(transaction)
-    } else {
-        createDate(transaction.date)
-        arrOfTransactions.push({
-            date: transaction.date,
-            transactions: [transaction]
-        })
-    }
-
+    addTransaction(transaction)
+    
     console.log(arrOfTransactions)
 
-    createTransaction(transaction, document.getElementById(transaction.date))
     const response = addTransactionRequest(transaction.date, transaction)
 
     let dayAmount = +document.getElementById(transaction.date).querySelector('.budget_item-date-sum').textContent.slice(0, -2)
@@ -54,6 +42,36 @@ function handleAddTransaction() {
 
     inputAmount.value = ''
     inputCommentary.value = ''
+}
+
+function addTransaction(transaction) {
+    const wrappers = [...document.querySelectorAll('.budget_item-wrapper')]
+    const index = arrOfTransactions.findIndex(group => group.date === transaction.date);
+
+    if (index !== -1) {
+        arrOfTransactions[index].transactions.push(transaction);
+        createTransaction(transaction, document.getElementById(transaction.date))
+    } else {
+        arrOfTransactions.push({
+            date: transaction.date,
+            transactions: [transaction],
+            totalAmount: transaction.amount
+        });
+
+        const newDateBlock = createDate(transaction.date)
+
+        for (let wrapper of wrappers) {
+            if (transaction.date.localeCompare(wrapper.id, { sensitivity: 'base' }) > 0) {
+                historyList.insertBefore(newDateBlock, wrapper)
+                break
+            }
+        }
+
+        createTransaction(transaction, newDateBlock)
+        const totalSum = document.getElementById(transaction.date).querySelector('.budget_item-date-sum')
+        totalSum.textContent = `${transaction.totalAmount} ₽`
+    }
+
 }
 
 function createDate(date) {
@@ -77,7 +95,6 @@ function createDate(date) {
     newDate.append(daySum)
 
     return dateWrapper
-
 }
 
 export function createTransaction(transaction, dateWrapper) {
@@ -112,13 +129,14 @@ export function createTransaction(transaction, dateWrapper) {
 }
 
 function renderTransaction() {
-    const sortedArrOfTransactions = [...arrOfTransactions].sort((a, b) => b.date.localeCompare(a, { sensitivity: 'base' }))
+    const sortedArrOfTransactions = [...arrOfTransactions].sort((a, b) => b.date.localeCompare(a.date, { sensitivity: 'base' }))
     console.log(arrOfTransactions)
-    console.log(mapOfTransactions)
     console.log(sortedArrOfTransactions)
 
     for (let transactions of sortedArrOfTransactions) {
         createDate(transactions.date)
+        const totalSum = document.getElementById(transactions.date).querySelector('.budget_item-date-sum')
+        totalSum.textContent = `${transactions.totalAmount} ₽`
         const dateBlock = document.getElementById(transactions.date)
         for (let transaction of transactions.transactions) {
             if (transaction.date == dateBlock.id) {
@@ -127,9 +145,8 @@ function renderTransaction() {
         }
     }
 
-    calculateDayAmount()
-    calculateTransactions()
-
+    
+    console.log(sortedArrOfTransactions)
 }
 
 function sortDates(arr) {

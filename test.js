@@ -26,4 +26,7 @@ function addTransaction() {
     return t
 }
 
-console.log(addTransaction())
+
+let jazz = 'abao 0'
+
+console.log(jazz.slice(0, -2))
