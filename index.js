@@ -12,6 +12,7 @@ const addTransactionButton = document.querySelector('.budget_inputs-add')
 
 const historyList = document.querySelector('.budget_list')
 
+
 function handleAddTransaction() {
     const transaction = {
         category: inputCategory.value,
@@ -22,6 +23,8 @@ function handleAddTransaction() {
     }
 
     addTransaction(transaction)
+
+    setProgress()
     
     console.log(arrOfTransactions)
 
@@ -160,30 +163,41 @@ function renderTransaction() {
     console.log(sortedArrOfTransactions)
 }
 
-function sortDates(arr) {
-    arr = [...arr].sort((a, b) => b.localeCompare(a, { sensitivity: 'base' }))
-    return arr
-}
+function setProgress() {
+    const totalIncomePlan = +document.querySelector('.budget_income-plan').textContent.slice(0, -2)
+    const totalIncomeFact = +document.querySelector('.budget_income-fact').textContent.slice(0, -2)
+    const totalOutcomePlan = +document.querySelector('.budget_outcome-plan').textContent.slice(0, -2)
+    const totalOutcomeFact = +document.querySelector('.budget_outcome-fact').textContent.slice(0, -2)
+    const totalBarWidth = 261
 
-function calculateDayAmount() {
-    let daySum = 0
-    let currentDate = null
-    const sortedArrOfTransactions = [...localArrOfTransactions].sort((a, b) => b.date.localeCompare(a.date, { sensitivity: 'base' }))
-    for (let transaction of sortedArrOfTransactions) {
-        if (transaction.date !== currentDate) {
-            currentDate = transaction.date
-            daySum = 0
-        } 
+    let totalIncomeRatio = totalIncomeFact / totalIncomePlan
+    let totalOutcomeRatio = totalOutcomeFact / totalOutcomePlan
+    let fillIncomeBarWidth = totalBarWidth * totalIncomeRatio
+    let fillOutcomeBarWidth = totalBarWidth * totalOutcomeRatio
 
-        daySum += transaction.amount
-        
-        document.getElementById(transaction.date).querySelector('.budget_item-date-sum').innerHTML = `${daySum} ₽`
+    console.log(totalOutcomePlan, totalOutcomeFact, totalOutcomeRatio)
+    console.log(totalIncomePlan, totalIncomeFact, totalIncomeRatio )
 
+    if (totalIncomeRatio >= 1) {
+        document.querySelector('.budget_income-bar-fill').setAttribute('width', totalBarWidth);
+    } else {
+        document.querySelector('.budget_income-bar-fill').setAttribute('width', fillIncomeBarWidth);
     }
-}
 
+    if (totalOutcomeRatio >= 1) {
+        document.querySelector('.budget_outcome-bar-fill').setAttribute('width', totalBarWidth);
+        document.querySelector('.budget_outcome-bar-fill').setAttribute('fill', '#FF0000');
+        document.querySelector('.budget_outcome-bar-total').setAttribute('fill', '#FF0000');
+    } else {
+        document.querySelector('.budget_outcome-bar-fill').setAttribute('width', fillOutcomeBarWidth);
+    }
+
+
+}
 
 renderTransaction()
+
+setProgress()
 
 addTransactionButton.addEventListener('click', handleAddTransaction)
 
