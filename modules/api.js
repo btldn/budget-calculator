@@ -20,17 +20,17 @@ export default async function getTransactions() {
         } 
     
 
-        for (let [date, transactionsForDate] of mapOfTransactions) {
+        for (let [date, transactionsOfDay] of mapOfTransactions) {
             let total = 0
 
-            for (let dateTransaction of transactionsForDate) {
+            for (let dateTransaction of transactionsOfDay) {
                 total += dateTransaction.amount
             }
 
             arrOfTransactions.push({
                 date,
-                transactions: transactionsForDate,
-                totalAmount: total
+                transactions: transactionsOfDay,
+                amountOfDay: total
             });
 
             total = 0

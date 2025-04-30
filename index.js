@@ -8,15 +8,9 @@ const inputDate = document.querySelector('.budget_input-date')
 let sumOfIncomes = 0
 let sumOfOutcomes = 0
 
-
-let localArrOfDates = arrOfDates
-let localArrOfTransactions = arrOfTransactions
-
 const addTransactionButton = document.querySelector('.budget_inputs-add')
 
 const historyList = document.querySelector('.budget_list')
-
-const dayAmount = document.querySelectorAll('.budget_item-amount')
 
 function handleAddTransaction() {
     const transaction = {
@@ -37,9 +31,6 @@ function handleAddTransaction() {
     dayAmount += transaction.amount
     document.getElementById(transaction.date).querySelector('.budget_item-date-sum').innerHTML = `${dayAmount} ₽`
 
-    calculateTransactions()
-
-
     inputAmount.value = ''
     inputCommentary.value = ''
 }
@@ -48,6 +39,9 @@ function addTransaction(transaction) {
     const wrappers = [...document.querySelectorAll('.budget_item-wrapper')]
     const index = arrOfTransactions.findIndex(group => group.date === transaction.date);
 
+    const allIncome = +document.querySelector('.budget_income-fact').textContent.slice(0, -2)
+    const allOutcome = +document.querySelector('.budget_outcome-fact').textContent.slice(0, -2)
+    
     if (index !== -1) {
         arrOfTransactions[index].transactions.push(transaction);
         createTransaction(transaction, document.getElementById(transaction.date))
@@ -55,7 +49,7 @@ function addTransaction(transaction) {
         arrOfTransactions.push({
             date: transaction.date,
             transactions: [transaction],
-            totalAmount: transaction.amount
+            amountOfDay: transaction.amount
         });
 
         const newDateBlock = createDate(transaction.date)
@@ -68,8 +62,13 @@ function addTransaction(transaction) {
         }
 
         createTransaction(transaction, newDateBlock)
-        const totalSum = document.getElementById(transaction.date).querySelector('.budget_item-date-sum')
-        totalSum.textContent = `${transaction.totalAmount} ₽`
+    }
+
+    if (transaction.amount > 0) {
+        document.querySelector('.budget_income-fact').innerHTML = `${allIncome + transaction.amount} ₽`
+        console.log(allIncome + transaction.amount)
+    } else {
+        document.querySelector('.budget_outcome-fact').innerHTML = `${allOutcome + transaction.amount * -1} ₽`
     }
 
 }
@@ -129,6 +128,8 @@ export function createTransaction(transaction, dateWrapper) {
 }
 
 function renderTransaction() {
+    const allIncome = document.querySelector('.budget_income-fact')
+    const allOutcome = document.querySelector('.budget_outcome-fact')
     const sortedArrOfTransactions = [...arrOfTransactions].sort((a, b) => b.date.localeCompare(a.date, { sensitivity: 'base' }))
     console.log(arrOfTransactions)
     console.log(sortedArrOfTransactions)
@@ -136,13 +137,23 @@ function renderTransaction() {
     for (let transactions of sortedArrOfTransactions) {
         createDate(transactions.date)
         const totalSum = document.getElementById(transactions.date).querySelector('.budget_item-date-sum')
-        totalSum.textContent = `${transactions.totalAmount} ₽`
+        totalSum.textContent = `${transactions.amountOfDay} ₽`
         const dateBlock = document.getElementById(transactions.date)
         for (let transaction of transactions.transactions) {
             if (transaction.date == dateBlock.id) {
                 createTransaction(transaction, dateBlock)
             }
         }
+
+        if (transactions.amountOfDay > 0) {
+            sumOfIncomes += transactions.amountOfDay
+        } else {
+            sumOfOutcomes += transactions.amountOfDay
+        }
+
+        allIncome.innerHTML = `${sumOfIncomes} ₽`
+        allOutcome.innerHTML = `${sumOfOutcomes * -1} ₽`
+
     }
 
     
@@ -171,22 +182,6 @@ function calculateDayAmount() {
     }
 }
 
-function calculateTransactions() {
-    const allIncome = document.querySelector('.budget_income-fact')
-    const allOutcome = document.querySelector('.budget_outcome-fact')
-
-    for (let transaction of localArrOfTransactions) {
-        if (transaction.amount >= 0) {
-            sumOfIncomes += transaction.amount
-        } else {
-            sumOfOutcomes += (transaction.amount * -1)
-        }
-    }
-
-
-    allIncome.innerHTML = sumOfIncomes
-    allOutcome.innerHTML = sumOfOutcomes
-}
 
 renderTransaction()
 
