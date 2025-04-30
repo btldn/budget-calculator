@@ -22,13 +22,13 @@ function handleAddTransaction() {
         date: inputDate.value
     }
 
-    addTransaction(transaction)
+    if (!(inputDate.value == '' || inputAmount.value == '')) {
+        addTransaction(transaction)
+        const response = addTransactionRequest(transaction.date, transaction)
+        setProgress()
+    }
 
-    setProgress()
-    
     console.log(arrOfTransactions)
-
-    const response = addTransactionRequest(transaction.date, transaction)
 
     let dayAmount = +document.getElementById(transaction.date).querySelector('.budget_item-date-sum').textContent.slice(0, -2)
     dayAmount += transaction.amount
@@ -103,6 +103,17 @@ export function createTransaction(transaction, dateWrapper) {
     const newTransaction = document.createElement('li')
     newTransaction.className = 'budget_item'
     newTransaction.dataset.id = transaction.id
+    if (transaction.category == 'Зарплата') {
+        newTransaction.classList.add('salary')
+    } else if (transaction.category == 'Супермаркет') {
+        newTransaction.classList.add('food')
+    } else if (transaction.category == 'Ресторан') {
+        newTransaction.classList.add('restaurant')
+    } else if (transaction.amount > 0) {
+        newTransaction.classList.add('positive')
+    } else if (transaction.amount < 0) {
+        newTransaction.classList.add('negative')
+    }
     dateWrapper.append(newTransaction)
 
     const transactionTitle = document.createElement('div')
@@ -159,7 +170,8 @@ function renderTransaction() {
 
     }
 
-    
+    setProgress()
+
     console.log(sortedArrOfTransactions)
 }
 
@@ -196,8 +208,6 @@ function setProgress() {
 }
 
 renderTransaction()
-
-setProgress()
 
 addTransactionButton.addEventListener('click', handleAddTransaction)
 

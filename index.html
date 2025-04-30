@@ -21,7 +21,7 @@
                 </div>
                 <div class="budget_outcome-bar">
                     <svg class="budget_outcome-bar" width="261px" height="11px" >
-                        <rect class="budget_outcome-bar-fill" x="0" y="0" width="100" height="11" rx="5" ry="15" fill="#0077FF"/>
+                        <rect class="budget_outcome-bar-fill" x="0" y="0" width="0" height="11" rx="5" ry="15" fill="#0077FF"/>
                         <rect class="budget_outcome-bar-total" x="0" y="0" width="261" height="11" rx="5" ry="15" fill="#0077FF" />
                     </svg>
                 </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="budget_income-bar">
                     <svg class="budget_income-bar" width="261px" height="11px" >
-                        <rect class="budget_income-bar-fill" x="0" y="0" width="30" height="11" rx="5" ry="15" fill="#08C040"/>
+                        <rect class="budget_income-bar-fill" x="0" y="0" width="0" height="11" rx="5" ry="15" fill="#08C040"/>
                         <rect class="budget_income-bar-total" x="0" y="0" width="261" height="11" rx="5" ry="15" fill="#08C040" />
                     </svg>
                 </div>
@@ -44,25 +44,30 @@
     </section>
 
     <section class="budget_inputs">
-        <div class="budget_inputs-header">
-            <h3 class="budget_inputs-title">Добавить транзакцию</h3>
-            <button class="budget_inputs-add">Добавить</button>
-        </div>
-        <div class="budget_inputs-body">
-            <input type='date' class="budget_input-date" required>
-            <select class="budget_input-source">
-                <option value="Тинькофф">Тинькофф</option>
-                <option value="Наличные">Наличные</option>
-                <option value="Сбербанк">Сбербанк</option>
-            </select>
-            <select class="budget_input-category">
-                <option value="Зарплата">Зарплата</option>
-                <option value="Ресторан">Ресторан</option>
-                <option value="Супермаркет">Супермаркет</option>
-            </select>
-            <input class="budget_input-amount" placeholder="Введите сумму">
-            <textarea class="budget_input-commentary" placeholder="Комментарий..."></textarea>
-        </div>
+        <form class="budget_inputs-form">
+            <div class="budget_inputs-header">
+                <h3 class="budget_inputs-title">Добавить транзакцию</h3>
+                <button class="budget_inputs-add">Добавить</button>
+            </div>
+            <div class="budget_inputs-body">
+                <input type='date' class="budget_input-date" required>
+                <select class="budget_input-source">
+                    <option value="" disabled selected hidden>Источник...</option> 
+                    <option value="Тинькофф">Тинькофф</option>
+                    <option value="Наличные">Наличные</option>
+                    <option value="Сбербанк">Сбербанк</option>
+                </select>
+                <select class="budget_input-category">
+                    <option class="budget_input-category-start-option" disabled selected hidden>Категория...</option> 
+                    <option value="Зарплата" >Зарплата</option>
+                    <option value="Ресторан">Ресторан</option>
+                    <option value="Супермаркет">Супермаркет</option>
+                </select>
+                <input class="budget_input-amount" placeholder="Введите сумму" required>
+                <textarea class="budget_input-commentary" placeholder="Комментарий..."></textarea>
+            </div>
+        </form>
+        
             
     </section>
 
