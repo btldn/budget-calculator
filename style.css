@@ -12,7 +12,7 @@ html {
 
 .budget_header {
     margin: 0 auto;
-    margin-top: 75px;
+    margin-top: 30px;
 }
 
 .budget_header-wrapper {
@@ -174,8 +174,12 @@ html {
 
 .budget_list {
     list-style: none;
-    max-height: 500px;
+    max-height: 425px;
     overflow: auto;
+}
+
+.budget_item-wrapper {
+    position: relative;
 }
 
 .budget_item-header {
@@ -183,6 +187,7 @@ html {
     justify-content: space-between;
     margin-bottom: 13px;
     padding-right: 17px;
+    align-items: center;
 }
 
 .budget_item {
@@ -194,6 +199,9 @@ html {
     margin-bottom: 13px;
     padding: 10px 17px 10px 50px;
     border-radius: 12px;
+    box-shadow: 2px 3px 6px 0px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    pointer-events: none;
 }
 
 .restaurant::before {
@@ -266,7 +274,18 @@ html {
     left: 15px;
 }
 
-
+.loading::before {
+    content: '';
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background-image: url('/resources/images/Rolling.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    top: -6px;
+    right: 115px;
+}
 
 .budget_item-title {
     display: flex;
@@ -282,6 +301,49 @@ html {
     font-size: 12px;
 }
 
+.budget_item-controls {
+    display: flex;
+    position: relative;
+    min-width: 100px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.budget_item-delete {
+    background-color: rgb(255, 255, 255);
+    border: none;
+    padding: 3px 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 3px 6px 0px rgba(0, 0, 0, 0.1);
+    pointer-events :all;
+}
+
+.budget_item-delete:hover {
+    background-color: rgb(255, 79, 79);
+    transition: ease-in-out 0.15s;
+}
+
+.budget_item-delete:hover .budget_item-delete-icon {
+    fill: white;
+    transition: ease-in-out 0.15s;
+}
+
+.budget_item-delete:active {
+    background-color: rgb(255, 0, 0);
+    transition: ease-in-out 0.15s;
+}
+
+.budget_item-delete-icon {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    fill: rgb(17, 17, 17);
+    top: 1px;
+    pointer-events: none;
+}
+
+
 .budget_item-date-sum {
     font-weight: bold;
 }
@@ -296,6 +358,25 @@ html {
 
 .negative-amount {
     color: #FF5C5C;
+}
+
+.budget_item-commentary {
+    background: #E0E0E0;
+    font-size: 14px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    max-height: 0;
+    transform: translateY(-30px);
+    transition: all 0.2s ease-in-out;
+    padding-left: 18px;
+}
+
+.budget_item-commentary.active {
+    position: relative;
+    max-height: 500px;
+    transform: translateY(-17px);
+    padding: 12px 18px;
 }
 
 
